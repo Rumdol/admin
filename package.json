@@ -23,7 +23,7 @@
     "@nuxtjs/sitemap": "^6.1.5",
     "autoprefixer": "^10.4.20",
     "dayjs-nuxt": "^1.1.2",
-    "element-plus": "^2.6.3",
+    "element-plus": "^2.8.7",
     "eslint": "^8.38.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.1.3",
