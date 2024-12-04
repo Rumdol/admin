@@ -7,13 +7,12 @@
         </div>
       </div>
     </div>
-
+    <div class="content">
+      <h1 class="text-center w-30"><strong>Welcomme to Rumdul</strong></h1>
+      <span class="w-10">Login into your account</span>
+    </div>
     <div class="row mb-3">
-      <label class="col-sm-3 col-form-label"
-        >{{ $t('auth.username') }}
-        <sup class="text-danger"> *</sup>
-      </label>
-      <div class="col-sm-9">
+      <div class="col-sm-15">
         <input
           v-bind="username"
           type="text"
@@ -28,14 +27,10 @@
       </div>
     </div>
     <div class="row">
-      <label class="col-sm-3 col-form-label"
-        >{{ $t('auth.password') }}
-        <sup class="text-danger"> *</sup>
-      </label>
-      <div class="col-sm-9 mb-3">
+      <div class="col-sm-15 mb-3">
         <input
           v-bind="password"
-          type="password"
+          :type="passwordVisible ? 'text' : 'password'"
           :placeholder="$t('auth.password')"
           :class="errors.password ? 'is-invalid' : ''"
           :data-vv-validate-on="['blur', 'change']"
@@ -45,34 +40,20 @@
           {{ errors.password }}
         </div>
       </div>
-      <div class="col-sm-9 offset-sm-3">
-        <div class="row">
-          <div class="col-sm-6">
-            <button
-              type="submit"
-              class="btn btn-md btn-primary text-white w-100 mt-2"
-              :disabled="meta.touched ? !meta.valid : true"
-            >
-              {{ $t('auth.login') }}
-            </button>
-          </div>
-          <div class="col-sm-6">
-            <button
-              type="button"
-              class="btn btn-md btn-secondary text-white w-100 mt-2"
-              @click="setActiveTab('signup')"
-            >
-              {{ $t('auth.signup') }}
-            </button>
-          </div>
-        </div>
-        <div class="row mt-3">
-          <div class="col-12 text-start">
-            <div class="text-primary forgot-pass" @click="showSendEmail">
-              {{ $t('auth.forgot_your_password') }}
-            </div>
-          </div>
-        </div>
+    </div>
+    <div class="col-12 text-end">
+      <div class="text-primary forgot-pass" @click="showSendEmail">
+        {{ $t('auth.forgot_your_password') }}
+      </div>
+    </div>
+    <div class="button">
+      <div class="col-sm-6">
+        <button
+          type="submit"
+          class="btn btn-md btn-primary text-white w-100 mt-2"
+        >
+          {{ $t('auth.login') }}
+        </button>
       </div>
     </div>
   </form>
@@ -84,6 +65,7 @@ import { useI18n } from 'vue-i18n'
 import * as yup from 'yup'
 import { useAuthStore } from '~/store/auth'
 import { getHttpValidationMessage } from '~/utils/common'
+import '@fortawesome/fontawesome-free/css/all.css';
 
 const emits = defineEmits([
   'tabChange',
@@ -101,6 +83,9 @@ const { t } = useI18n()
 const setActiveTab = (tab) => {
   emits('tabChange', tab)
 }
+const passwordVisible = ref(false);
+const togglePasswordVisibility = () => {
+  passwordVisible.value = !passwordVisible.value; };
 
 const validationSchema = yup.object({
   username: yup
@@ -157,11 +142,40 @@ const onSubmit = handleSubmit(async (values) => {
 const showSendEmail = () => emits('forgotPassClick', true)
 </script>
 <style scoped lang="scss">
+.content{
+  font-family: Inter, sans-serif;
+}
 .forgot-pass {
   cursor: pointer;
+  background-color: transparent;
+  display: block;
+  margin-top: 2px;
+  margin-left: 20px;
+  color: #00B69B;
 
   &:hover {
     text-decoration: underline;
   }
+}
+.button{
+  display: flex;
+  justify-content: center;
+  justify-items: center ;
+  align-items: center;
+  .btn{
+    background-color: #00B69B;
+    border: none;
+    height: 50px;
+  }
+}
+span{
+  display: flex;
+  justify-content: center;
+  justify-items: center ;
+  align-items: center;
+  padding: 10px;
+}
+.form-control{
+  height: 70px;
 }
 </style>
