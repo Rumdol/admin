@@ -1,9 +1,9 @@
 {
-  "name": "ite",
-  "description": "ite",
+  "name": "rumdul",
+  "description": "rumdul",
   "author": "ite",
   "url": "http://localhost:3000",
-  "copyright": "ite",
+  "copyright": "rumdul",
   "license": "MIT",
   "private": true,
   "type": "module",

@@ -1,20 +1,20 @@
 <template>
-  <div class="container-fluid home-content">
-    <button @click="navigateTo('/profile')">Go to Dashboard</button>
-
-    <div v-if="product" class="mt-4">
-      <h2>Fetched Product</h2>
-      <div class="d-flex flex-wrap" v-for="items in product" :key="items.limit">
-        <div class="d-flex" v-for="item in items.products" :key="item.id" style="flex: 1 1 300px; padding: 10px;">
-          <el-card style="max-width: 100%">
-            <template #header>{{ item.title }}</template>
-            <img :src="item.thumbnail" style="width: 100%" />
-          </el-card>
-        </div>
-      </div>
+  <div class="background">
+    <img src="@/assets/image/homePage.png" alt="home page background">
+  </div>
+  <div  class="content">
+    <div>
+      <img src="@/assets/image/logo.svg" alt="logo">
     </div>
-    <div v-else>
-      <SkeletonProduct />
+    <div>
+      <span>
+        The beauty of fragrance is that <br>
+        it speaks to your heart and <br>
+        hopefully someone else's.
+      </span>
+    </div>
+    <div>
+      <button v-on:click="navigateTo({name : 'login'})">Login</button>
     </div>
   </div>
 </template>
@@ -22,30 +22,95 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useProductStore } from '~/store/product.js'
+import { navigateTo } from 'nuxt/app';
+import LoginTab from "~/components/Page/Header/Popup/Auth/LoginTab.vue";
 
-useSeoMeta({ title: 'ITE | Home' })
+
+useSeoMeta({ title: 'Rumdul | Home' })
+
 
 const product = ref(null)
-
 onMounted(async () => {
   const productStore = useProductStore()
   await productStore.getProduct()
   product.value = productStore.product
 })
+
 </script>
 
 <style scoped>
+.background {
+  position: absolute;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  align-items: center;
+  justify-content: center;
+  z-index:1;
+  animation: page-animation 2s;
+}
+.background img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.content {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  z-index: 2;
+  font-family: Inter, sans-serif;
 
-h3 {
-  color: #475669;
-  font-size: 1.5rem;
+
+  img {
+    width: 210px;
+    height: 210px;
+    animation: page-animation 2s;
+  }
+
+  span {
+    display: block;
+    color: white;
+    font-size: 32px;
+    text-align: center;
+    padding: 20px 0 400px 1000px ;
+    animation: page-animation 2s infinite;
+  }
+
+  button {
+    background: none;
+    border: 1px solid #00B69B;
+    width: 260px;
+    height: 70px;
+    text-align: center;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-left: 100px;
+    animation: page-animation 0.6s ease-in-out;
+  }
+
+  button:active {
+    opacity: 0.7;
+    box-shadow: 0 4px 10px 0 #00B69B;
+    animation: page-animation 2s;
+
+  }
 }
 
-p {
-  color: #555;
+@keyframes page-animation {
+  from {
+    opacity: 0;
+    transform: translateZ(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateZ(0);
+  }
 }
 
-strong {
-  font-weight: bold;
-}
+
 </style>
