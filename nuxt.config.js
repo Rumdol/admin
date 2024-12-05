@@ -3,11 +3,14 @@ export default defineNuxtConfig({
   ssr: true,
   devtools: { enabled: false },
 
+  build: {
+    transpile: ['@popperjs/core'], // Ensures Popper.js is transpiled for modern syntax
+  },
+
   modules: [
     "@nuxtjs/eslint-module",
     "@pinia/nuxt",
     ["@vee-validate/nuxt", { autoImports: true }],
-    "dayjs-nuxt",
     ["@vueuse/nuxt", { ssr: false }],
     ["@nuxtjs/sitemap"],
     "@element-plus/nuxt"
