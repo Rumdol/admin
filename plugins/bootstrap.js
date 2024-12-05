@@ -1,6 +1,7 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap';
+// ~/plugins/bootstrap.js
 
-export default defineNuxtPlugin((nuxtApp) => {
-  nuxtApp.provide('bootstrap', bootstrap)
-})
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+
+export default defineNuxtPlugin(() => {
+  // You can also perform any additional setup here if necessary
+});

@@ -1,23 +1,28 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   ssr: true,
   devtools: { enabled: false },
 
   build: {
-    transpile: ['@popperjs/core'], // Ensures Popper.js is transpiled for modern syntax
+    transpile: ['@popperjs/core'],
   },
 
   modules: [
     "@nuxtjs/eslint-module",
     "@pinia/nuxt",
     ["@vee-validate/nuxt", { autoImports: true }],
+    "dayjs-nuxt",
     ["@vueuse/nuxt", { ssr: false }],
     ["@nuxtjs/sitemap"],
     "@element-plus/nuxt"
   ],
 
-  css: ["~/assets/scss/index.scss"],
+  css: [
+    "~/assets/scss/index.scss",
+    "bootstrap/dist/css/bootstrap.min.css"
+  ],
+
   elementPlus: { /** Options */ },
+
   runtimeConfig: {
     public: {
       appBaseUrl: process.env.APP_BASE_URL,
@@ -35,9 +40,8 @@ export default defineNuxtConfig({
   },
 
   sitemap: {
-    hostname: process.env.APP_SITE_URL || "https://yourwebsite.com", // Replace with your actual domain
+    hostname: process.env.APP_SITE_URL || "https://yourwebsite.com",
     routes: async () => {
-      // You can fetch dynamic routes from an API or define static routes
       return [
         "/page-1",
         "/page-2",
@@ -45,14 +49,14 @@ export default defineNuxtConfig({
         "/products/product-2"
       ];
     },
-    gzip: true, // Optional: compresses the sitemap.xml file
+    gzip: true,
     exclude: [
-      "/admin/**" // Exclude specific routes (like admin routes) if needed
+      "/admin/**"
     ]
   },
 
   plugins: [
-    { src: "~/plugins/bootstrap.js", mode: "client" }
+    { src: '~/plugins/bootstrap.js', mode: 'client' }
   ],
 
   compatibilityDate: "2024-11-10"
