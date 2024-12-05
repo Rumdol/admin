@@ -1,10 +1,4 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import dayjs from 'dayjs';
-
-import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
-
-dayjs.extend(isSameOrBefore);
-
 export default defineNuxtConfig({
   ssr: true,
   devtools: { enabled: false },
@@ -20,9 +14,7 @@ export default defineNuxtConfig({
   ],
 
   css: ["~/assets/scss/index.scss"],
-  elementPlus: {
-    dayjs: () => dayjs, // Custom `day.js` instance
-  },
+  elementPlus: { /** Options */ },
   runtimeConfig: {
     public: {
       appBaseUrl: process.env.APP_BASE_URL,

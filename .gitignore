@@ -23,10 +23,3 @@ logs
 .env.*
 !.env.example
 .vscode
-
-.vagrant
-.vagrant.*
-
-
-.netlify
-.netlify.*
