@@ -2,9 +2,9 @@ export default defineNuxtConfig({
   ssr: true,
   devtools: { enabled: false },
 
-  // build: {
-  //   transpile: ['@popperjs/core'],
-  // },
+  build: {
+    transpile: ['@popperjs/core'],
+  },
 
   modules: [
     "@nuxtjs/eslint-module",
