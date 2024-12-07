@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  $END$
+<div>Category</div>
 </template>
 
 <style scoped lang="scss">
