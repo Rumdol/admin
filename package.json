@@ -51,7 +51,7 @@
     "vue-picture-cropper": "^0.6.2",
     "vue-sweetalert2": "^5.0.5"
   },
-  "resolutions": {
-    "rollup": "npm:@rollup/wasm-node"
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "4.9.5"
   }
 }
