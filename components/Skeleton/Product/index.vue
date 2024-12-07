@@ -8,7 +8,6 @@
           style="
             display: flex;
             align-items: center;
-            justify-items: space-between;
           "
         >
           <el-skeleton-item variant="text" style="margin-right: 16px" />

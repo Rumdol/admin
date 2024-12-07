@@ -1,63 +1,77 @@
 <template>
-  <form @submit.prevent="onSubmit">
-    <div class="row">
-      <div class="col-sm-9 offset-sm-3">
-        <div v-if="alertErrorMessage" class="alert alert-danger" role="alert">
+  <el-form @submit.prevent="onSubmit" label-position="top">
+    <div class="grid grid-cols-12 gap-4">
+      <div class="col-span-9 col-start-4">
+        <el-alert
+          v-if="alertErrorMessage"
+          type="error"
+          :closable="false"
+          class="mb-4"
+        >
           {{ alertErrorMessage }}
-        </div>
+        </el-alert>
       </div>
     </div>
-    <div class="content">
-      <h1 class="text-center w-30"><strong>Welcomme to Rumdul</strong></h1>
-      <span class="w-10">Login into your account</span>
+    <div class="text-center">
+      <h1 class="font-bold text-2xl mb-4">Welcome to Rumdul</h1>
+      <p class="text-sm mb-6">Login into your account</p>
     </div>
-    <div class="row mb-3">
-      <div class="col-sm-15">
-        <input
+    <div class="mb-6">
+      <el-form-item
+        :error="errors.username"
+        class="w-full"
+      >
+        <el-input
           v-bind="username"
-          type="text"
           placeholder="Username"
-          :class="errors.username ? 'is-invalid' : ''"
-          :data-vv-validate-on="['blur', 'change']"
-          class="form-control"
+          clearable
+          :class="errors.username ? 'border-red-500' : ''"
         />
-        <div class="invalid-feedback">
-          {{ errors.username }}
-        </div>
-      </div>
+      </el-form-item>
     </div>
-    <div class="row">
-      <div class="col-sm-15 mb-3">
-        <input
+    <div class="mb-6">
+      <el-form-item
+        :error="errors.password"
+        class="w-full"
+      >
+        <el-input
           v-bind="password"
           :type="passwordVisible ? 'text' : 'password'"
           placeholder="Password"
-          :class="errors.password ? 'is-invalid' : ''"
-          :data-vv-validate-on="['blur', 'change']"
-          class="form-control"
-        />
-        <div class="invalid-feedback">
-          {{ errors.password }}
-        </div>
-      </div>
-    </div>
-    <div class="col-12 text-end">
-      <div class="text-primary forgot-pass" @click="showSendEmail">
-        Forgot password ?
-      </div>
-    </div>
-    <div class="button">
-      <div class="col-sm-6">
-        <button
-          type="submit"
-          class="btn btn-md btn-primary text-white w-100 mt-2"
+          clearable
+          :class="errors.password ? 'border-red-500' : ''"
         >
-          Login
-        </button>
-      </div>
+          <template #suffix>
+            <el-icon
+              @click="togglePasswordVisibility"
+              class="cursor-pointer"
+            >
+              <i
+                :class="passwordVisible ? 'fas fa-eye-slash' : 'fas fa-eye'"
+              ></i>
+            </el-icon>
+          </template>
+        </el-input>
+      </el-form-item>
     </div>
-  </form>
+    <div class="text-right mb-4">
+      <span class="text-primary cursor-pointer hover:underline" @click="showSendEmail">
+        Forgot password?
+      </span>
+    </div>
+    <div class="flex justify-center">
+      <el-button
+        type="primary"
+        size="large"
+        class="w-full md:w-1/2"
+        native-type="submit"
+      >
+        Login
+      </el-button>
+    </div>
+  </el-form>
 </template>
+
 
 <script setup>
 import { useForm } from 'vee-validate'

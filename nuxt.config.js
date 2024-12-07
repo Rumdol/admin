@@ -2,8 +2,11 @@ export default defineNuxtConfig({
   ssr: true,
   devtools: { enabled: false },
 
-  build: {
-    transpile: ['@popperjs/core'],
+  postcss: {
+    plugins: {
+      tailwindcss: {},
+      autoprefixer: {},
+    },
   },
 
   modules: [
@@ -13,12 +16,16 @@ export default defineNuxtConfig({
     "dayjs-nuxt",
     ["@vueuse/nuxt", { ssr: false }],
     ["@nuxtjs/sitemap"],
+    "@element-plus/nuxt"
   ],
 
   css: [
-    "~/assets/scss/index.scss",
-    "bootstrap/dist/css/bootstrap.min.css"
+    "~/assets/scss/index.scss"
   ],
+
+  sassOptions: {
+    silenceDeprecations: ["legacy-js-api"],
+  },
 
   elementPlus: { /** Options */ },
 
@@ -55,8 +62,7 @@ export default defineNuxtConfig({
   },
 
   plugins: [
-    { src: '~/plugins/bootstrap.js', mode: 'client' }
   ],
 
-  compatibilityDate: "2024-11-10"
+  compatibilityDate: "2024-12-07",
 });

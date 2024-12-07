@@ -9,7 +9,6 @@
     <img src="@/assets/image/logo.svg" alt="logo">
   </div>
   <div class="login-form">
-    <el-button type="primary">Primary</el-button>
     <FormLogin/>
   </div>
 </template>
@@ -51,7 +50,7 @@
   border: 0.5px solid #2EC4B6;
   border-radius: 10px;
   padding: 20px;
-  left: 1000px;
+  left: 1200px;
   animation: login-page-animation 1s ;
 }
 @keyframes login-page-animation {
