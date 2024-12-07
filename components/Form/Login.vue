@@ -16,7 +16,7 @@
         <input
           v-bind="username"
           type="text"
-          :placeholder="$t('auth.username')"
+          placeholder="Username"
           :class="errors.username ? 'is-invalid' : ''"
           :data-vv-validate-on="['blur', 'change']"
           class="form-control"
@@ -31,7 +31,7 @@
         <input
           v-bind="password"
           :type="passwordVisible ? 'text' : 'password'"
-          :placeholder="$t('auth.password')"
+          placeholder="Password"
           :class="errors.password ? 'is-invalid' : ''"
           :data-vv-validate-on="['blur', 'change']"
           class="form-control"
@@ -43,7 +43,7 @@
     </div>
     <div class="col-12 text-end">
       <div class="text-primary forgot-pass" @click="showSendEmail">
-        {{ $t('auth.forgot_your_password') }}
+        Forgot password ?
       </div>
     </div>
     <div class="button">
@@ -52,7 +52,7 @@
           type="submit"
           class="btn btn-md btn-primary text-white w-100 mt-2"
         >
-          {{ $t('auth.login') }}
+          Login
         </button>
       </div>
     </div>
@@ -61,10 +61,9 @@
 
 <script setup>
 import { useForm } from 'vee-validate'
-import { useI18n } from 'vue-i18n'
 import * as yup from 'yup'
-import { useAuthStore } from '~/store/auth'
-import { getHttpValidationMessage } from '~/utils/common'
+import { useAuthStore } from '~/store/auth.js'
+import { getHttpValidationMessage } from '~/utils/common.js'
 import '@fortawesome/fontawesome-free/css/all.css';
 
 const emits = defineEmits([
@@ -78,7 +77,6 @@ const emits = defineEmits([
 const { setAccessToken } = useAuthenticate()
 const { showLoading, hideLoading } = useLoading()
 const { setUser } = useAuthStore()
-const { t } = useI18n()
 
 const setActiveTab = (tab) => {
   emits('tabChange', tab)
@@ -94,10 +92,10 @@ const validationSchema = yup.object({
     .max(15)
     .matches(
       /^(?!_)(?!.*\s)[a-z][a-z0-9_]*$|^0\d{8,9}$/,
-      t('auth.username_validate'),
+      'Username must be alphanumeric and start with a letter',
     )
-    .label(t('auth.username')),
-  password: yup.string().required().min(8).max(20).label(t('auth.password')),
+    .label('Username'),
+  password: yup.string().required().min(8).max(20).label('Password'),
 })
 const { errors, defineInputBinds, handleSubmit, meta } = useForm({
   validationSchema,

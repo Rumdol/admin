@@ -9,7 +9,7 @@
     <img src="@/assets/image/logo.svg" alt="logo">
   </div>
   <div class="login-form">
-    <PageHeaderPopupAuthLoginTab/>
+    <FormLogin/>
   </div>
 </template>
 

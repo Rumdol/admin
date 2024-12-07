@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Loading />
     <main ref="mainContent">
       <slot />
     </main>

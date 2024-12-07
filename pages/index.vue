@@ -23,7 +23,6 @@
 import { ref, onMounted } from 'vue'
 import { useProductStore } from '~/store/product.js'
 import { navigateTo } from 'nuxt/app';
-import LoginTab from "~/components/Page/Header/Popup/Auth/LoginTab.vue";
 
 
 useSeoMeta({ title: 'Rumdul | Home' })
