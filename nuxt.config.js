@@ -13,7 +13,6 @@ export default defineNuxtConfig({
     "dayjs-nuxt",
     ["@vueuse/nuxt", { ssr: false }],
     ["@nuxtjs/sitemap"],
-    "@element-plus/nuxt"
   ],
 
   css: [

@@ -9,6 +9,7 @@
     <img src="@/assets/image/logo.svg" alt="logo">
   </div>
   <div class="login-form">
+    <el-button type="primary">Primary</el-button>
     <FormLogin/>
   </div>
 </template>
