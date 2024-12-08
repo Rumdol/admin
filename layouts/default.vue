@@ -1,8 +1,12 @@
 <template>
-  <div>
-    <main ref="mainContent">
-      <slot />
+  <div class="flex h-screen">
+    <Sidebar class="flex-none"/>
+    <div class="flex flex-col ">
+    <Header class="flex-none" />
+    <main ref="mainContent" class="p-4 flex-grow">
+      <NuxtPage />
     </main>
+    </div>
   </div>
 </template>
 
@@ -11,7 +15,6 @@ import { useAuthStore } from '~/store/auth'
 import { onMounted } from 'vue'
 
 const { isLoggedIn } = useAuthenticate()
-
 onMounted(async () => {
   if (isLoggedIn.value) {
     await useAuthStore().getMe()

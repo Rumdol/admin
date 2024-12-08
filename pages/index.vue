@@ -27,7 +27,11 @@ import { navigateTo } from 'nuxt/app';
 
 useSeoMeta({ title: 'Rumdul | Home' })
 
-
+definePageMeta(
+  {
+    layout: 'login',
+  }
+)
 const product = ref(null)
 onMounted(async () => {
   const productStore = useProductStore()

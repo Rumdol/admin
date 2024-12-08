@@ -1,4 +1,9 @@
 <script setup>
+definePageMeta(
+  {
+    layout: 'login',
+  }
+)
 </script>
 
 <template>
@@ -51,6 +56,8 @@
   border-radius: 10px;
   padding: 20px;
   left: 1200px;
+  width: 400px;
+  height: 400px;
   animation: login-page-animation 1s ;
 }
 @keyframes login-page-animation {

@@ -24,6 +24,7 @@
         <el-input
           v-bind="username"
           placeholder="Username"
+          class="h-12 w-full rounded-md"
           clearable
           :class="errors.username ? 'border-red-500' : ''"
         />
@@ -38,6 +39,7 @@
           v-bind="password"
           :type="passwordVisible ? 'text' : 'password'"
           placeholder="Password"
+          class="h-12 w-full rounded-md"
           clearable
           :class="errors.password ? 'border-red-500' : ''"
         >
@@ -54,16 +56,16 @@
         </el-input>
       </el-form-item>
     </div>
-    <div class="text-right mb-4">
+    <div class="text-right mb-4 ">
       <span class="text-primary cursor-pointer hover:underline" @click="showSendEmail">
         Forgot password?
       </span>
     </div>
-    <div class="flex justify-center">
+    <div class="button flex justify-center">
       <el-button
         type="primary"
         size="large"
-        class="w-full md:w-1/2"
+        class="w-full md:w-1/2 bg-primary"
         native-type="submit"
       >
         Login
@@ -163,7 +165,7 @@ const showSendEmail = () => emits('forgotPassClick', true)
   display: block;
   margin-top: 2px;
   margin-left: 20px;
-  color: #00B69B;
+  color: #2EC4B6;
 
   &:hover {
     text-decoration: underline;
@@ -174,11 +176,6 @@ const showSendEmail = () => emits('forgotPassClick', true)
   justify-content: center;
   justify-items: center ;
   align-items: center;
-  .btn{
-    background-color: #00B69B;
-    border: none;
-    height: 50px;
-  }
 }
 span{
   display: flex;
@@ -190,4 +187,5 @@ span{
 .form-control{
   height: 70px;
 }
+
 </style>
