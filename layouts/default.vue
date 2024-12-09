@@ -4,7 +4,7 @@
     <div class="flex flex-col ">
     <Header class="flex-none" />
     <main ref="mainContent" class="p-4 flex-grow">
-      <NuxtPage />
+      <slot />
     </main>
     </div>
   </div>
