@@ -1,7 +1,12 @@
 <template>
-  <div>Dashboard</div>
+  <div class="">
+    <total-user/>
+    yong
+  </div>
 </template>
 <script setup>
+
+import TotalUser from "~/components/totalUser.vue";
 
 useSeoMeta({
   titleTemplate: (title) => {
@@ -9,3 +14,6 @@ useSeoMeta({
   },
 })
 </script>
+<style scoped>
+
+</style>

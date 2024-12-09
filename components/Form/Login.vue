@@ -22,8 +22,9 @@
         class="w-full"
       >
         <el-input
-          v-bind="username"
+          v-model="username"
           placeholder="Username"
+          class="h-12 w-full rounded-md"
           clearable
           :class="errors.username ? 'border-red-500' : ''"
         />
@@ -35,9 +36,10 @@
         class="w-full"
       >
         <el-input
-          v-bind="password"
+          v-model="password"
           :type="passwordVisible ? 'text' : 'password'"
           placeholder="Password"
+          class="h-12 w-full rounded-md"
           clearable
           :class="errors.password ? 'border-red-500' : ''"
         >
@@ -59,11 +61,11 @@
         Forgot password?
       </span>
     </div>
-    <div class="flex justify-center">
+    <div class="button flex justify-center">
       <el-button
         type="primary"
         size="large"
-        class="w-full md:w-1/2"
+        class="w-full md:w-1/2 bg-primary"
         native-type="submit"
       >
         Login
@@ -73,86 +75,71 @@
 </template>
 
 
+
 <script setup>
-import { useForm } from 'vee-validate'
-import * as yup from 'yup'
-import { useAuthStore } from '~/store/auth.js'
-import { getHttpValidationMessage } from '~/utils/common.js'
-import '@fortawesome/fontawesome-free/css/all.css';
+import { ref } from 'vue';
 
-const emits = defineEmits([
-  'tabChange',
-  'successLogin',
-  'hide',
-  'forgotPassClick',
-  'requiredVerifyOtp',
-])
+const alertErrorMessage = ref(''); // To display any error messages
+const errors = ref({
+  username: null,
+  password: null,
+}); // For form validation errors
 
-const { setAccessToken } = useAuthenticate()
-const { showLoading, hideLoading } = useLoading()
-const { setUser } = useAuthStore()
-
-const setActiveTab = (tab) => {
-  emits('tabChange', tab)
-}
+const username = ref('');
+const password = ref('');
 const passwordVisible = ref(false);
+
 const togglePasswordVisibility = () => {
-  passwordVisible.value = !passwordVisible.value; };
+  passwordVisible.value = !passwordVisible.value;
+};
 
-const validationSchema = yup.object({
-  username: yup
-    .string()
-    .required()
-    .max(15)
-    .matches(
-      /^(?!_)(?!.*\s)[a-z][a-z0-9_]*$|^0\d{8,9}$/,
-      'Username must be alphanumeric and start with a letter',
-    )
-    .label('Username'),
-  password: yup.string().required().min(8).max(20).label('Password'),
-})
-const { errors, defineInputBinds, handleSubmit, meta } = useForm({
-  validationSchema,
-})
+const validateForm = () => {
+  // Reset errors
+  errors.value.username = username.value ? null : 'Username is required';
+  errors.value.password = password.value ? null : 'Password is required';
 
-const username = defineInputBinds('username')
-const password = defineInputBinds('password')
+  return !errors.value.username && !errors.value.password;
+};
 
-const alertErrorMessage = ref('')
-const onSubmit = handleSubmit(async (values) => {
-  alertErrorMessage.value = ''
-  showLoading()
+const onSubmit = async () => {
+  if (!validateForm()) return;
 
-  const [service, transformer] = await Promise.all([
-    useService('Auth'),
-    useTransformer('Auth'),
-  ])
+  try {
+    // Simulate an API call for login
+    const response = await fakeApiLogin(username.value, password.value);
 
-  const req = await transformer((module) => module.loginReq(values))
-  const { data, error } = await service((module) => module.login(req))
-
-  hideLoading()
-  if (data?.value) {
-    if (data.value?.data?.required_verify_otp_code) {
-      emits('requiredVerifyOtp', data.value.data.provided_value)
+    if (response.success) {
+      alertErrorMessage.value = '';
+      console.log('Login successful');
+      // Redirect or handle successful login
     } else {
-      const fetch = await transformer((module) => module.fetch(data.value))
-      if (fetch?.access_token) {
-        setAccessToken(fetch.access_token)
-      }
-      if (fetch?.user) {
-        setUser(fetch.user)
-      }
-
-      emits('successLogin', true)
+      alertErrorMessage.value = response.message;
     }
-  } else if (error?.value) {
-    alertErrorMessage.value = getHttpValidationMessage(error.value.data)
+  } catch (error) {
+    alertErrorMessage.value = 'An unexpected error occurred.';
+    console.error(error);
   }
-})
+};
 
-const showSendEmail = () => emits('forgotPassClick', true)
+const fakeApiLogin = async (username, password) => {
+  // Simulate API response
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      if (username === 'test' && password === 'password') {
+        resolve({ success: true });
+      } else {
+        resolve({ success: false, message: 'Invalid credentials' });
+      }
+    }, 1000);
+  });
+};
+
+const showSendEmail = () => {
+  console.log('Show forgot password email modal');
+  // Implement forgot password functionality here
+};
 </script>
+
 <style scoped lang="scss">
 .content{
   font-family: Inter, sans-serif;
@@ -163,7 +150,7 @@ const showSendEmail = () => emits('forgotPassClick', true)
   display: block;
   margin-top: 2px;
   margin-left: 20px;
-  color: #00B69B;
+  color: #2EC4B6;
 
   &:hover {
     text-decoration: underline;
@@ -174,11 +161,6 @@ const showSendEmail = () => emits('forgotPassClick', true)
   justify-content: center;
   justify-items: center ;
   align-items: center;
-  .btn{
-    background-color: #00B69B;
-    border: none;
-    height: 50px;
-  }
 }
 span{
   display: flex;
@@ -190,4 +172,5 @@ span{
 .form-control{
   height: 70px;
 }
+
 </style>
