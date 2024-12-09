@@ -41,7 +41,7 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      title: "ITE"
+      title: "Rumdul"
     }
   },
 
@@ -63,6 +63,7 @@ export default defineNuxtConfig({
 
   plugins: [
   ],
+
 
   compatibilityDate: "2024-12-07",
 });

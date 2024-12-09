@@ -8,12 +8,12 @@ const email = 'yong@gmail.com';
     <div class="top-bar h-16 items-center justify-between">
       <div class="flex items-center gap-5">
         <input type="text" placeholder="Search..." class="search rounded-full border-2 border-gray-10 p-2" />
-        <button class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border bg-amber-50">
+        <button class="flex h-9 w-9  items-center justify-center rounded-full border bg-amber-50">
           <i class="fa-solid fa-bell"></i>
         </button>
         <!--Profile-->
-        <div class="relative flex items-center gap-2">
-          <Button class="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full border bg-amber-50">
+        <div class="flex items-center gap-2">
+          <Button class="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-amber-50">
             <img src="@/assets/image/profile.jpg" alt="profile login" class="loginProfile w-full h-full ">
           </Button>
           <div class="flex flex-col items-start">

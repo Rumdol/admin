@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <div class="text-black">
+  <div class="text-black h-auto">
     <aside class="sidebar flex flex-col h-screen p-4 text-black">
       <nav>
         <ul class="space-y-2">
