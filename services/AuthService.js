@@ -3,7 +3,7 @@ import BaseService from './BaseService'
 let instance = null
 class AuthService extends BaseService {
   constructor () {
-    super('auth')
+    super('')
   }
 
   static getInstance () {
@@ -17,20 +17,8 @@ class AuthService extends BaseService {
     return await this._post(`${this._prefix}/login`, req)
   }
 
-  async register (req) {
-    return await this._post(`${this._prefix}/register`, req)
-  }
-
-  async sendOTPCode (req) {
-    return await this._post(`${this._prefix}/send-otp-code`, req)
-  }
-
-  async verifyOTPCode (req) {
-    return await this._post(`${this._prefix}/verify-otp-code`, req)
-  }
-
-  async resetPassword (req) {
-    return await this._post(`${this._prefix}/reset-password`, req)
+  async getMe () {
+    return await this._get(`${this._prefix}/me`)
   }
 
   async logout (req) {

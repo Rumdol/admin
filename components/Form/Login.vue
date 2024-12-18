@@ -1,160 +1,106 @@
 <template>
-  <el-form @submit.prevent="onSubmit" label-position="top">
-    <div class="grid grid-cols-12 gap-4">
-      <div class="col-span-9 col-start-4">
-        <el-alert
-          v-if="alertErrorMessage"
-          type="error"
-          :closable="false"
-          class="mb-4"
-        >
-          {{ alertErrorMessage }}
-        </el-alert>
-      </div>
-    </div>
-    <div class="text-center">
-      <h1 class="font-bold text-2xl mb-4">Welcome to Rumdul</h1>
-      <p class="text-sm mb-6">Login into your account</p>
-    </div>
-    <div class="mb-6">
-      <el-form-item
-        :error="errors.username"
-        class="w-full"
+  <div
+    class="content"
+  >
+    <div class="">
+      <h1 class="text-2xl font-bold mb-6 text-center">Login</h1>
+
+      <el-form
+        class="form-control"
+        :model="loginForm"
+        :rules="rules"
+        ref="loginFormRef"
+        label-position="top"
+        @submit.prevent="handleLogin"
       >
-        <el-input
-          v-model="username"
-          placeholder="Username"
-          class="h-12 w-full rounded-md"
-          clearable
-          :class="errors.username ? 'border-red-500' : ''"
-        />
-      </el-form-item>
+        <el-form-item label="Email" prop="email">
+          <el-input
+            v-model="loginForm.email"
+            type="email"
+            placeholder="Enter your email"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="Password" prop="password">
+          <el-input
+            v-model="loginForm.password"
+            type="password"
+            placeholder="Enter your password"
+            show-password
+          ></el-input>
+        </el-form-item>
+        <div class="flex justify-between items-center mb-4">
+          <el-checkbox v-model="loginForm.rememberMe">Remember Me</el-checkbox>
+        </div>
+        <el-form-item>
+          <el-button type="primary" class="button w-full" @click="handleLogin"
+          >Login
+          </el-button>
+        </el-form-item>
+      </el-form>
     </div>
-    <div class="mb-6">
-      <el-form-item
-        :error="errors.password"
-        class="w-full"
-      >
-        <el-input
-          v-model="password"
-          :type="passwordVisible ? 'text' : 'password'"
-          placeholder="Password"
-          class="h-12 w-full rounded-md"
-          clearable
-          :class="errors.password ? 'border-red-500' : ''"
-        >
-          <template #suffix>
-            <el-icon
-              @click="togglePasswordVisibility"
-              class="cursor-pointer"
-            >
-              <i
-                :class="passwordVisible ? 'fas fa-eye-slash' : 'fas fa-eye'"
-              ></i>
-            </el-icon>
-          </template>
-        </el-input>
-      </el-form-item>
-    </div>
-    <div class="text-right mb-4">
-      <span class="text-primary cursor-pointer hover:underline" @click="showSendEmail">
-        Forgot password?
-      </span>
-    </div>
-    <div class="button flex justify-center">
-      <el-button
-        type="primary"
-        size="large"
-        class="w-full md:w-1/2 bg-primary"
-        native-type="submit"
-      >
-        Login
-      </el-button>
-    </div>
-  </el-form>
+  </div>
 </template>
 
-
-
 <script setup>
-import { ref } from 'vue';
+import { reactive, ref } from 'vue'
+import { ElMessage } from 'element-plus'
+import { useAuthStore } from '~/store/auth.js'
 
-const alertErrorMessage = ref(''); // To display any error messages
-const errors = ref({
-  username: null,
-  password: null,
-}); // For form validation errors
+useSeoMeta({ title: 'Rumdul | Sign In' })
+definePageMeta({
+  layout: 'auth',
+  middleware: ['redirect-if-authenticated'],
+})
 
-const username = ref('');
-const password = ref('');
-const passwordVisible = ref(false);
+const authStore = useAuthStore()
 
-const togglePasswordVisibility = () => {
-  passwordVisible.value = !passwordVisible.value;
-};
+const loginForm = reactive({
+  email: '',
+  password: '',
+  rememberMe: false,
+})
 
-const validateForm = () => {
-  // Reset errors
-  errors.value.username = username.value ? null : 'Username is required';
-  errors.value.password = password.value ? null : 'Password is required';
+const rules = {
+  email: [
+    { required: true, message: 'Email is required', trigger: 'blur' },
+    {
+      type: 'email',
+      message: 'Please enter a valid email address',
+      trigger: 'blur',
+    },
+  ],
+  password: [
+    { required: true, message: 'Password is required', trigger: 'blur' },
+    {
+      min: 6,
+      message: 'Password must be at least 6 characters',
+      trigger: 'blur',
+    },
+  ],
+}
 
-  return !errors.value.username && !errors.value.password;
-};
+const loginFormRef = ref(null)
 
-const onSubmit = async () => {
-  if (!validateForm()) return;
-
-  try {
-    // Simulate an API call for login
-    const response = await fakeApiLogin(username.value, password.value);
-
-    if (response.success) {
-      alertErrorMessage.value = '';
-      console.log('Login successful');
-      // Redirect or handle successful login
+const handleLogin = async () => {
+  loginFormRef.value.validate(async (valid) => {
+    if (valid) {
+      await authStore.login({
+        email: loginForm.email,
+        password: loginForm.password,
+      })
+      navigateTo('/')
+      ElMessage.success('Login successful')
     } else {
-      alertErrorMessage.value = response.message;
+      ElMessage.error('Please fill in the form correctly')
     }
-  } catch (error) {
-    alertErrorMessage.value = 'An unexpected error occurred.';
-    console.error(error);
-  }
-};
+  })
+}
 
-const fakeApiLogin = async (username, password) => {
-  // Simulate API response
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      if (username === 'test' && password === 'password') {
-        resolve({ success: true });
-      } else {
-        resolve({ success: false, message: 'Invalid credentials' });
-      }
-    }, 1000);
-  });
-};
-
-const showSendEmail = () => {
-  console.log('Show forgot password email modal');
-  // Implement forgot password functionality here
-};
 </script>
 
 <style scoped lang="scss">
 .content{
   font-family: Inter, sans-serif;
-}
-.forgot-pass {
-  cursor: pointer;
-  background-color: transparent;
-  display: block;
-  margin-top: 2px;
-  margin-left: 20px;
-  color: #2EC4B6;
-
-  &:hover {
-    text-decoration: underline;
-  }
 }
 .button{
   display: flex;
