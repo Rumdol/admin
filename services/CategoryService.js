@@ -23,18 +23,23 @@ class CategoryService extends BaseService {
     // Make the API call and return the result
     return await this._get(url);
   }
-  async createCategory(data) {
-    return await this._get(`${this._prefix}/${data.id}`, data)
+  async createCategory(data = {}) {
+    // Create a new category
+    console.log(data);
+    return await this._post(`${this._prefix}`, data);
   }
+
 
   async updateCategory(id, data) {
     return await this._get(`${this._prefix}/${id}`, data)
   }
-  async showCategory(id) {
-    return await this._get(`${this._prefix}/${id}`);
+  async SearchCategory(params) {
+    const queryParams = new URLSearchParams(params).toString()
+    const response = await this._get(`${this._prefix}/${queryParams}`);
+    return response.data
   }
   async deleteCategory(id) {
-    return await this._delete(`${this._prefix}/${id}`, {})
+    return await this._delete(`${this._prefix}/delete/${id}`)
   }
 
 }export default CategoryService
