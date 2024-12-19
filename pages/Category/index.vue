@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import { navigateTo } from '#imports'
+import { useCategoryStore } from '~/store/category.js'
 
 const value = ref('')
 const brand = [
@@ -21,38 +22,54 @@ const toggleDropdown = () =>{
 const tableData = ref([]);
 const multipleTableRef = ref(null);
 const multipleSelection = ref([]);
+const totalItems = ref(0); // Track total items for pagination
+const currentPage = ref(1); // Current page number
+//use the category store
+const categoryStore = useCategoryStore();
 
 const fetchCategories = async () => {
   try{
-   // const response = await axios.get('/api/catgories');
-   // tableData.value = response.data;
+    const {categories, total} = await categoryStore.getCategory(
+      {
+        page: currentPage.value,
+      }
+    );
+    tableData.value = categories.data || [];
+    totalItems.value = total || 0;
+    console.log(tableData.value);
   }catch(error){
     console.log('Failed to fetch categories',error)
   }
 }
+
+// Handle page change
+const handlePageChange = (newPage) => {
+  currentPage.value = newPage;
+  fetchCategories();
+};
+
+
 const handleSelectionChange = (val) => {
   multipleSelection.value = val;
 };
 
-const handleEdit = (row) => {
-  console.log('Edit', row); // Add your edit logic here
-};
-const handleDelete = (row) => {
+const handleDelete = async (id) => {
   try{
-    //await axios.delete(`/api/catgories/${row.id}`);
-    console.log('Delete',row);
+    const deleteCategory = await categoryStore.deleteCategory(id);
     fetchCategories();
   }catch(error){
-    console.log('Failed to delete category',error);
+    console.log('Failed to delete categories',error)
   }
-};
+}
 
-onMounted(fetchCategories);
+onMounted(() => {
+  fetchCategories();
+})
 </script>
 
 
 <template>
-  <div class="flex flex-col max-w-full ">
+  <div class="flex flex-col p-4">
     <!--Section 1-->
     <div class="pb-4 mb-4">
       <ul class="flex  w-full justify-between items-center ">
@@ -61,7 +78,7 @@ onMounted(fetchCategories);
         </li>
         <li>
           <button
-            class="px-4 py-4 mr-[10px] bg-primary text-white rounded-md opacity-100 hover:bg-opacity-50 active:bg-opacity-30"
+            class="px-4 py-4  mr-[50px] bg-primary text-white rounded-md opacity-100 hover:bg-opacity-50 active:bg-opacity-30"
             @click="navigateTo('/category/createCategory')"
           >Create Category</button>
         </li>
@@ -97,20 +114,19 @@ onMounted(fetchCategories);
     </div>
 
     <!--Section table-->
-      <div>
+      <div class="table">
         <el-table
           ref="multipleTableRef"
           :data="tableData"
-          class="max-w-lg"
 
           @selection-change="handleSelectionChange"
         >
           <el-table-column type="selection" :selectable="selectable" width="50" />
-          <el-table-column prop="id" label="ID" width="140" />
-          <el-table-column prop="name" label="Name" width="400" />
-          <el-table-column prop="position" label="Position" width="400" />
+          <el-table-column prop="id" label="ID" width="300" />
+          <el-table-column prop="name" label="Name" width="300" />
+          <el-table-column prop="parent" label="Parent" width="300" />
           <el-table-column prop="visible" label="Visible Menu" width="300" />
-          <el-table-column prop="action" label="Action" width="300" >
+          <el-table-column prop="action" label="Action" width="200" >
             <template #default="scope">
               <el-button
                 @click="heandleEdit(scope.row)"
@@ -118,7 +134,7 @@ onMounted(fetchCategories);
                 <i class="fa-solid fa-pen"></i>
               </el-button>
               <el-button
-                @click="heandleEdit(scope.row)"
+                @click="handleDelete(scope.row)"
               >
                 <i class="fa-solid fa-trash"></i>
               </el-button>
@@ -127,6 +143,17 @@ onMounted(fetchCategories);
 
         </el-table>
       </div>
+
+    <!--Pagination-->
+    <div class="pr-[50px] pt-[10px] mb-4  justify-center justify-items-end ">
+      <el-pagination
+        :current-page="currentPage"
+        :page-size="pageSize"
+        :total="totalItems"
+        @current-change="handlePageChange"
+        layout="total,prev, pager, next, jumper"
+      />
+    </div>
   </div>
 </template>
 
@@ -136,5 +163,11 @@ onMounted(fetchCategories);
 }
 .filter{
   width: 150px;
+}
+.table{
+  box-shadow: 2px 2px 5px 0px rgba(0, 0, 0, 0.5);
+  border-radius: 20px;
+  width: 1500px;
+
 }
 </style>

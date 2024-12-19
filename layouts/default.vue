@@ -1,9 +1,9 @@
 <template>
-  <div class="flex h-screen">
-    <Sidebar class="flex-none"/>
+  <div class="layout flex h-screen overflow-y-auto">
+    <Sidebar/>
     <div class="flex flex-col ">
-    <Header class="flex-none" />
-    <main ref="mainContent" class="p-4 flex-grow">
+    <Header />
+    <main ref="mainContent" class="p-4">
       <slot />
     </main>
     </div>
@@ -21,3 +21,7 @@ onMounted(async () => {
   }
 })
 </script>
+
+<style scoped>
+
+</style>

@@ -32,6 +32,9 @@ useSeoMeta({
   },
 })
 
+//definePageMeta({
+//  middleware: ['authenticate'],
+//})
 const totalUser = ref(0);
 const totalVendors = ref(0);
 const totalProduct = ref(0);
