@@ -12,7 +12,7 @@ const props = defineProps({
 <template>
   <div class="total-revenue-container flex w-[350px] h-[100px] p-4 md-4 justify-between items-center">
     <div class="w-[200px]">
-      <span><strong class="text-xl">Total revenue:</strong> <br> {{total}}</span>
+      <span><strong class="text-xl">Total revenue:</strong> <br> {{total}} $</span>
     </div>
     <div>
       <i class="flex fa-solid fa-money-check rounded-md border ml-4 p-4  justify-center items-center text-primary"></i>

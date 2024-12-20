@@ -3,7 +3,7 @@
     <div class="total-list flex ">
       <ul class="flex gap-[50px] ml-[5px]">
         <li>
-          <TotalUser :total="dashboardStore.dashboard.total_user"/>
+          <TotalUser :total="dashboardStore.dashboard.total_users"/>
         </li>
         <li>
           <TotalVendors :total="dashboardStore.dashboard.total_vendors"/>
@@ -12,13 +12,13 @@
           <TotalProducts :total="dashboardStore.dashboard.total_products"/>
         </li>
         <li>
-          <TotalRevenue :total="dashboardStore.total_revenue"/>
+          <TotalRevenue :total="dashboardStore.dashboard.total_revenue"/>
         </li>
       </ul>
     </div>
     <div class="flex gap-3">
-      <TotalSaleCharts  :data="dashboardStore.salesChart"/>
-      <TotalTopPrduct ::data="dashboardStore.topProducts"/>
+      <TotalSaleCharts v-if="dashboardStore.dashboard.revenue_per_month" :revenue="dashboardStore.dashboard.revenue_per_month"/>
+      <TotalTopPrduct v-if="dashboardStore.dashboard.top_products" :data="dashboardStore.dashboard.top_products"/>
     </div>
   </div>
 </template>
