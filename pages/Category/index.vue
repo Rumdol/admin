@@ -2,7 +2,9 @@
 import { ref } from 'vue'
 import { useCategoryStore } from '~/store/category.js'
 import { useDebounce } from '~/composables/useDebounce.js'
-
+definePageMeta({
+  middleware: ['authenticated'],
+})
 const value = ref('')
 
 //use the category store
@@ -143,12 +145,16 @@ onMounted(() => {
       >
         <el-table-column type="selection" :selectable="selectable" width="50" />
         <el-table-column prop="id" label="ID" width="300" />
+        <el-table-column prop="icon" label="Icon" width="300">
+          <template #default="scope">
+            <img :src="scope.row.icon" alt="Icon" style="max-width: 100px; max-height: 100px;">
+          </template>
+        </el-table-column>
         <el-table-column prop="name" label="Name" width="300" />
         <el-table-column prop="parent" label="Parent" width="300" />
-        <el-table-column prop="visible" label="Visible Menu" width="300" />
         <el-table-column prop="action" label="Action" width="200">
           <template #default="scope">
-            <el-button @click="navigateTo('/category/edit')">
+            <el-button @click="navigateTo('/category/edit/' + scope.row.id)">
               <i class="fa-solid fa-pen"></i>
             </el-button>
             <el-button @click="confirmDelete(scope.row.id)">

@@ -29,9 +29,8 @@ class CategoryService extends BaseService {
     return await this._post(`${this._prefix}`, data);
   }
 
-
   async updateCategory(id, data) {
-    return await this._get(`${this._prefix}/${id}`, data)
+    return await this._post(`${this._prefix}/update/${id}`, data)
   }
   async SearchCategory(params) {
     const queryParams = new URLSearchParams(params).toString()
@@ -40,6 +39,11 @@ class CategoryService extends BaseService {
   }
   async deleteCategory(id) {
     return await this._delete(`${this._prefix}/delete/${id}`)
+  }
+
+  //show
+  async showCategory(id) {
+    return await this._get(`${this._prefix}/${id}`)
   }
 
 }export default CategoryService

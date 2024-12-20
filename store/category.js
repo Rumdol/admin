@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import CategoryService from '~/services/CategoryService.js'
+import { ref, computed } from 'vue'
 
 
 export const useCategoryStore = defineStore('category', () => {
@@ -46,7 +47,9 @@ export const useCategoryStore = defineStore('category', () => {
   const updateCategory = async (id, data) => {
     try {
       const response = await categoryService.updateCategory(id, data);
-      this.category = response; // Update the category state with the new data
+
+      // Assuming you have a reactive category state
+      category.value = response; // Update category state with the new data
       ElMessage.success('Category updated successfully');
       return response;
     } catch (error) {
@@ -68,11 +71,23 @@ export const useCategoryStore = defineStore('category', () => {
       throw new Error('Failed to delete category in store: ' + error.message)
     }
   }
+
+  //show category
+  const showCategory = async (id) => {
+    try {
+      const response = await categoryService.showCategory(id);
+      return response.data;
+    } catch (error) {
+      ElMessage.error(error.message || 'Failed to show category');
+      throw new Error(`Show category failed: ${error.message || 'Unknown error'}`);
+    }
+  }
   return {
     category: computed(() => category.value),
     getCategory,
     createCategory,
     deleteCategory,
-    updateCategory
+    updateCategory,
+    showCategory
   }
 })

@@ -13,7 +13,9 @@
 <script setup>
 import { useAuthStore } from '~/store/auth'
 import { onMounted } from 'vue'
-
+definePageMeta({
+  middleware: ['authenticated'],
+})
 const { isLoggedIn } = useAuthenticate()
 onMounted(async () => {
   if (isLoggedIn.value) {

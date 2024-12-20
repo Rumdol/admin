@@ -30,7 +30,9 @@ import { useDashboardStore } from '~/store/dashboard.js';
 useSeoMeta({
   titleTemplate: (title) => (title ? `${title} - Rumdul` : 'Rumdul'),
 });
-
+definePageMeta({
+  middleware: ['authenticated'],
+});
 
 //init the store
 const dashboardStore = useDashboardStore();

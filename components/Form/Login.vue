@@ -47,10 +47,6 @@ import { ElMessage } from 'element-plus'
 import { useAuthStore } from '~/store/auth.js'
 
 useSeoMeta({ title: 'Rumdul | Sign In' })
-definePageMeta({
-  layout: 'auth',
-  middleware: ['redirect-if-authenticated'],
-})
 
 const authStore = useAuthStore()
 
@@ -88,7 +84,7 @@ const handleLogin = async () => {
         email: loginForm.email,
         password: loginForm.password,
       })
-      navigateTo('/')
+      navigateTo('dashboard')
       ElMessage.success('Login successful')
     } else {
       ElMessage.error('Please fill in the form correctly')

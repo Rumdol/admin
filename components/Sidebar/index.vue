@@ -41,6 +41,11 @@
               <i class="fa-solid fa-layer-group mr-2 h-4 w-4"></i> Category
             </router-link>
           </li>
+          <li>
+            <router-link to="/Vendor" class="flex items-center p-2 rounded-md hover:bg-primary hover:bg-opacity-30 hover:text-opacity-30 active:bg-opacity-100">
+              <i class="fa-solid fa-store mr-2 h-4 w-4"></i> Vendor
+            </router-link>
+          </li>
           <li class="setting">
             <router-link to="/Setting" class="flex items-center p-2 rounded-md hover:bg-primary hover:bg-opacity-30 hover:text-opacity-30 active:bg-opacity-100 ">
               <i class="fa-solid fa-wrench mr-2 h-4 w-4"></i> Setting

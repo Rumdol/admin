@@ -1,9 +1,8 @@
 <script setup>
-definePageMeta(
-  {
-    layout: 'login',
-  }
-)
+definePageMeta({
+  layout: 'auth',
+  middleware: ['redirect-if-authenticated']
+})
 </script>
 
 <template>

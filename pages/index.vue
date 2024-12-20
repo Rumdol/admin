@@ -14,17 +14,12 @@
       </span>
     </div>
     <div>
-      <button v-on:click="navigateTo({name : 'login'})">Login</button>
+      <button v-on:click="navigateTo('login')">Login</button>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { useProductStore } from '~/store/product.js'
-import { navigateTo } from 'nuxt/app';
-
-
 useSeoMeta({ title: 'Rumdul | Home' })
 
 definePageMeta(
@@ -32,13 +27,6 @@ definePageMeta(
     layout: 'login',
   }
 )
-const product = ref(null)
-onMounted(async () => {
-  const productStore = useProductStore()
-  await productStore.getProduct()
-  product.value = productStore.product
-})
-
 </script>
 
 <style scoped>

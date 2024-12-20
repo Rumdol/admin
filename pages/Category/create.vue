@@ -1,146 +1,134 @@
-
 <script setup>
 import { reactive, ref } from 'vue'
-import {useCategoryStore} from '~/store/category.js'
-import { useRoute } from 'vue-router';
+import { useCategoryStore } from '~/store/category.js'
+import { useRoute, useRouter } from 'vue-router'
 
-const route = useRoute();
+definePageMeta({
+  middleware: ['authenticated'],
+})
+
+const route = useRoute()
+const router = useRouter()
 const categoryStore = useCategoryStore()
-// do not use same name with ref
+
+// Form validation reactive state
 const formValidate = reactive({
   name: '',
   parent: '',
-  iconList: '',
+  icon: null,  // Store icon as a single file object
   description: '',
-  status: false,
 })
+
 const formRef = ref(null)
-const rules= reactive({
+
+// Validation rules
+const rules = reactive({
   name: [
-    {
-      required: true, message: 'Please enter a name!', trigger: 'blur'
-    }
+    { required: true, message: 'Please enter a name!', trigger: 'blur' },
   ],
   parent: [
-    {
-      required: true, message: 'Please enter a name!', trigger: 'blur'
-    }
+    { required: true, message: 'Please enter a name!', trigger: 'blur' },
   ],
-  iconList: [
-    {
-      required: true, message: 'Please enter a metaTitle!', trigger: 'blur'
-    }
+  icon: [
+    { required: true, message: 'Please upload an icon!', trigger: 'blur' },
   ],
   description: [
-    {
-      required: true, message: 'Please enter a description!', trigger: 'blur'
-    }
+    { required: true, message: 'Please enter a description!', trigger: 'blur' },
   ],
+})
 
-});
 // Handle successful image upload
 const handleUploadSuccess = (response, file, fileList) => {
-  formValidate.iconList = [file]; // Store the uploaded file
-  console.log('Uploaded file:', response); // Process server response if needed
-};
+  formValidate.icon = file
+  console.log('Uploaded file:', file)
+}
 
 // Handle file removal
 const handleRemove = (file, fileList) => {
-  formValidate.iconList = []; // Clear the file list when the file is removed
-};
+  formValidate.icon = null
+}
 
-// Submit the form
+// Submit form
 const onSubmit = async () => {
-  if (!formRef.value) return;
+  if (!formRef.value) return
 
   formRef.value.validate(async (valid) => {
     if (valid) {
       try {
-        // Form data including the image URL
-        const formData = {
-          name: formValidate.name,
-          parent: formValidate.parent,
-          icon: formValidate.iconList.length > 0 ? formValidate.iconList.url : '', // Icon URL
-          description: formValidate.description,
-          status: formValidate.status,
-        };
+        // Prepare form data
+        const formData = new FormData()
+        formData.append('name', formValidate.name)
+        formData.append('parent', formValidate.parent)
+        formData.append('description', formValidate.description)
+        formData.append('icon', formValidate.icon.raw)  // Pass raw file for binary upload
 
-        // Create category using the service
-        await categoryStore.createCategory(formData);
-        console.log(formData);
-        console.log('Category created successfully!');
-        navigateTo('/category'); // Navigate back to the category page
+        // Create category via store
+        await categoryStore.createCategory(formData)
+
+        // Navigate after successful creation
+        router.push('/category')
+        console.log('Category created successfully!')
       } catch (error) {
-        console.error('Failed to create category:', error.message);
+        console.error('Failed to create category:', error.message)
       }
     } else {
-      console.log('Error during form validation!');
+      console.log('Error during form validation!')
     }
-  });
-};
-
-
+  })
+}
 </script>
-
 
 <template>
   <div class="create-category-form">
-    <div class="text-3xl mb-4 ">
-      <strong>
-        Create Category
-      </strong>
+    <div class="text-3xl mb-4">
+      <strong>Create Category</strong>
     </div>
-    <div >
-      <el-form
-          ref="formRef"
-        :model="formValidate"
-        label-width="auto"
-        class="max-w-lg justify-center items-center" >
-        <el-form-item label="Name" required prop="name">
-          <el-input
-            v-model="formValidate.name"
-            text="text"
-          />
-        </el-form-item>
-        <el-form-item label="Parent" required prop="parent">
-          <el-input v-model="formValidate.parent" />
-        </el-form-item>
 
-        <!-- Icon Upload -->
-        <el-form-item label="Icon" required prop="iconList">
-          <el-upload
+    <el-form ref="formRef" :model="formValidate" label-width="auto" class="max-w-lg justify-center items-center">
+      <!-- Category Name -->
+      <el-form-item label="Name" required prop="name">
+        <el-input v-model="formValidate.name" />
+      </el-form-item>
+
+      <!-- Parent Category -->
+      <el-form-item label="Parent" required prop="parent">
+        <el-input v-model="formValidate.parent" />
+      </el-form-item>
+
+      <!-- Icon Upload -->
+      <el-form-item label="Icon" required prop="icon">
+        <el-upload
           list-type="picture-card"
           :on-success="handleUploadSuccess"
           :on-remove="handleRemove"
-          :file-list="formValidate.iconList"
+          :file-list="formValidate.icon ? [formValidate.icon] : []"
           :limit="1"
-          accept="image/jpeg"
-          >
+          accept="image/jpeg, image/png, image/jpg"
+        >
           <i class="el-icon-plus"></i>
-          </el-upload>
-        </el-form-item>
-        <el-form-item label="Description" prop="description" >
-          <el-input v-model.text="formValidate.description" type="textarea" />
-        </el-form-item>
+        </el-upload>
+      </el-form-item>
 
-        <el-form-item label="Visible in Menu" prop="status">
-          <el-switch v-model="formValidate.status" />
-        </el-form-item>
-        <el-form-item class="flex justify-between items-center ml-80">
-          <el-button @click="navigateTo('/category')">Cancel</el-button>
-          <el-button  type="primary" @click="onSubmit" class="create-button active:bg-opacity-50">Create</el-button>
-        </el-form-item>
-      </el-form>
+      <!-- Description -->
+      <el-form-item label="Description" prop="description">
+        <el-input v-model="formValidate.description" type="textarea" />
+      </el-form-item>
 
-    </div>
+      <!-- Action Buttons -->
+      <el-form-item class="flex justify-between items-center ml-80">
+        <el-button @click="router.push('/category')">Cancel</el-button>
+        <el-button type="primary" @click="onSubmit">Create</el-button>
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 
 <style scoped lang="scss">
-:root{
+:root {
   font-family: Inter, sans-serif;
 }
-.create-category-form{
+
+.create-category-form {
   display: flex;
   flex-direction: column;
   justify-items: center;
@@ -152,13 +140,16 @@ const onSubmit = async () => {
   width: 700px;
   height: 700px;
 }
-.create-button{
-  background-color: #00B69B;
+
+.create-button {
+  background-color: #00b69b;
   border: none;
-  :hover{
+
+  :hover {
     opacity: 0.5;
   }
-  :active{
+
+  :active {
     opacity: 0.8;
   }
 }
