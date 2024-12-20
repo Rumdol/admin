@@ -2,8 +2,12 @@
 import { ref } from 'vue';
 import { navigateTo } from '#imports'
 import { useCategoryStore } from '~/store/category.js'
+import { debounce } from 'lodash'
 
 const value = ref('')
+
+//use the category store
+const categoryStore = useCategoryStore();
 const brand = [
   {
     label: 'Brand',
@@ -12,26 +16,22 @@ const brand = [
     label: 'Size',
   },
   ];
-const toggleDropdown = () =>{
-  const select = document.querySelector('.el-select');
-  const dropdown = select?.querySelector('.el-select-dropdown__wrap');
-  if(dropdown){
-    select.click();
-  }
-};
+
 const tableData = ref([]);
 const multipleTableRef = ref(null);
 const multipleSelection = ref([]);
 const totalItems = ref(0); // Track total items for pagination
 const currentPage = ref(1); // Current page number
-//use the category store
-const categoryStore = useCategoryStore();
+const searchTerm = ref('') // Ref for the search input
+// Debounced search handler
 
+//Get category to show on the table
 const fetchCategories = async () => {
   try{
     const {categories, total} = await categoryStore.getCategory(
       {
         page: currentPage.value,
+        search: searchTerm.value.trim(),
       }
     );
     tableData.value = categories.data || [];
@@ -48,19 +48,62 @@ const handlePageChange = (newPage) => {
   fetchCategories();
 };
 
-
 const handleSelectionChange = (val) => {
   multipleSelection.value = val;
 };
 
+
+
+// Handle deletion
 const handleDelete = async (id) => {
-  try{
-    const deleteCategory = await categoryStore.deleteCategory(id);
-    fetchCategories();
-  }catch(error){
-    console.log('Failed to delete categories',error)
+  try {
+    // Call the store function to delete the category
+    await categoryStore.deleteCategory(id)
+    ElMessage.success('Category deleted successfully')
+    // Refresh the table data
+    await fetchCategories()
+  } catch (error) {
+    ElMessage.error('Failed to delete category: ' + error.message)
+    console.error('Failed to delete category:', error)
   }
 }
+
+// Handle delete confirmation
+const confirmDelete = async (id) => {
+  try {
+    // Show confirmation dialog
+    await ElMessageBox.confirm(
+      'Are you sure you want to delete this category?',
+      'Delete Category',
+      {
+        confirmButtonText: 'Delete',
+        cancelButtonText: 'Cancel',
+        type: 'warning',
+      }
+    )
+    // If confirmed, call the delete handler with the passed ID
+    await handleDelete(id)
+  } catch (error) {
+    if (error !== 'cancel') {
+      ElMessage.error('Error while confirming delete: ' + error.message)
+      console.error('Error while confirming delete:', error)
+    } else {
+      ElMessage.info('Category deletion cancelled')
+    }
+  }
+}
+
+// Handle search (debounced)
+const searchHandler = debounce(async () => {
+  currentPage.value = 1; // Reset to the first page on search
+  await fetchCategories();
+}, 500);
+
+// Trigger search when the button is clicked
+const handleSearch = async () => {
+  await searchHandler();
+}
+
 
 onMounted(() => {
   fetchCategories();
@@ -85,11 +128,13 @@ onMounted(() => {
       </ul>
     </div>
 
-    <!--Section 2-->
-    <div class="bp-4 mb-4 w-full">
-      <ul class="flex  justify-start items-center ">
+    <!Search-->
+    <div class=" bp-4 mb-4 w-full">
+      <ul class="flex flex-row justify-start items-center ">
         <li>
           <el-input
+            v-model="searchTerm"
+            @input="handleSearch"
             placeholder="Search category"
             class="h-12 w-52 rounded-md"
           >
@@ -100,15 +145,6 @@ onMounted(() => {
               </el-icon>
             </template>
           </el-input>
-        </li>
-          <li class="flex items-center p-2">
-            <el-select
-              v-model="value"
-              placeholder="Filter by"
-              size="large"
-              class="filter">
-              <el-option v-for="item in brand" :key="item.value" :label="item.label" :value="item.value" />
-            </el-select>
         </li>
       </ul>
     </div>
@@ -129,12 +165,13 @@ onMounted(() => {
           <el-table-column prop="action" label="Action" width="200" >
             <template #default="scope">
               <el-button
-                @click="heandleEdit(scope.row)"
+                @click="navigateTo('/category/editCategory')"
               >
                 <i class="fa-solid fa-pen"></i>
+
               </el-button>
               <el-button
-                @click="handleDelete(scope.row)"
+                @click="confirmDelete(scope.row.id)"
               >
                 <i class="fa-solid fa-trash"></i>
               </el-button>

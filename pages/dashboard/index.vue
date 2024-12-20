@@ -1,54 +1,52 @@
 <template>
   <div class="dashboard-container ">
     <div class="total-list flex ">
-      <ul class="flex gap-[60px] ml-[5px]">
+      <ul class="flex gap-[50px] ml-[5px]">
         <li>
-          <TotalUser :total="totalUser"/>
+          <TotalUser :total="dashboardStore.dashboard.total_user"/>
         </li>
         <li>
-          <TotalVendors :total="totalVendors"/>
+          <TotalVendors :total="dashboardStore.dashboard.total_vendors"/>
         </li>
         <li>
-          <TotalProducts :total="totalProduct"/>
+          <TotalProducts :total="dashboardStore.dashboard.total_products"/>
         </li>
         <li>
-          <TotalRevenue :total="totalRevenue"/>
+          <TotalRevenue :total="dashboardStore.total_revenue"/>
         </li>
       </ul>
     </div>
     <div class="flex gap-3">
-      <TotalSaleCharts/>
-      <TotalTopPrduct/>
+      <TotalSaleCharts  :data="dashboardStore.salesChart"/>
+      <TotalTopPrduct ::data="dashboardStore.topProducts"/>
     </div>
   </div>
 </template>
 
 <script setup>
-import {ref, onMounted } from 'vue';
+import {onMounted } from 'vue';
+import { useDashboardStore } from '~/store/dashboard.js';
 
 useSeoMeta({
-  titleTemplate: (title) => {
-    return title ? `${title} - Rumdul` : 'Rumdul'
-  },
-})
+  titleTemplate: (title) => (title ? `${title} - Rumdul` : 'Rumdul'),
+});
 
-//definePageMeta({
-//  middleware: ['authenticate'],
-//})
-const totalUser = ref(0);
-const totalVendors = ref(0);
-const totalProduct = ref(0);
-const totalRevenue = ref(0);
-const salesChart = ref([]);
-const topProducts = ref([]);
 
-const fetchDashboardData = async () => {
+//init the store
+const dashboardStore = useDashboardStore();
+
+const fetchDashboard = async () => {
   try{
-    console.log('Total')
+    await dashboardStore.getDashboard();
+    console.log('Dashboard data loaded successfully.');
   }catch(error){
     console.log('Failed to fetch dashboardData',error);
   }
 }
+
+
+// Fetch data on component mount
+onMounted(fetchDashboard);
 </script>
 <style scoped>
 :root{

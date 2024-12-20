@@ -35,11 +35,13 @@ export default class BaseService {
     return useHttp(path, { method: 'PUT', ...payload })
   }
 
+  // Assuming _delete is defined like this
   _delete(path, params = null) {
     let req = {}
     if (params) {
-      req = { body: params }
+      req = { body: params }  // Ensure you're passing the correct data if necessary
     }
-    return useHttp(path, { method: 'DELETE', ...payload })
+    return useHttp(path, { method: 'DELETE', ...req })  // Correctly pass the request object
   }
+
 }
