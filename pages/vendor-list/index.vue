@@ -10,7 +10,7 @@ definePageMeta({
 
 const vendorStore = useVendorStore();
 const { debounce } = useDebounce()
-const { getVendor, vendorApprove, vendorReject } = vendorStore;
+const { getVendor } = vendorStore;
 const vendorList = ref([]);
 const currentPage = ref(1);
 const totalVendorRequest = ref(0);
@@ -18,11 +18,10 @@ const searchTerm = ref(''); //Ref for the search input
 
 
 // Fetch vendor requests
-const fetchVendorRequest = async () => {
+const fetchVendorList = async () => {
   try {
     const response = await getVendor({ page: currentPage.value, search: searchTerm.value.trim() });
     const { vendorRequest, total } = response || {};
-    vendorRequest.data = vendorRequest.data.filter(vendor => vendor.status !== 'active')
     vendorList.value = vendorRequest?.data || [];
     totalVendorRequest.value = total || 0;
   } catch (error) {
@@ -33,90 +32,13 @@ const fetchVendorRequest = async () => {
 // Handle page change
 const handlePageChange = (newPage) => {
   currentPage.value = newPage;
-  fetchVendorRequest();
+  fetchVendorList();
 };
-
-
-
-
-// Handle approve confirmation
-const handleApprove = async (id) => {
-  try {
-    // Call the store function to delete the category
-    await vendorApprove(id)
-    ElMessage.success('Approving successfully')
-    // Refresh the table data
-    await fetchVendorRequest();
-  } catch (error) {
-    ElMessage.error('Failed to approving: ' + error.message)
-    console.error('Failed to approving:', error)
-  }
-}
-const confirmApprove = async (id) => {
-  try {
-    // Show confirmation dialog
-    await ElMessageBox.confirm(
-      'Are you sure you want to approve this vendor?',
-      'Approve',
-      {
-        confirmButtonText: 'Approve',
-        cancelButtonText: 'Cancel',
-        type: 'warning',
-      },
-    )
-    // If confirmed, call the approved handler with the passed ID
-    await handleApprove(id)
-  } catch (error) {
-    if (error !== 'cancel') {
-      ElMessage.error('Error while confirming approve: ' + error.message)
-      console.error('Error while confirming approve:', error)
-    } else {
-      ElMessage.info('Vendor Approving cancelled')
-    }
-  }
-}
-
-// Handle reject confirmation
-const handleReject = async (id) => {
-  try {
-    // Call the store function to delete the category
-    await vendorReject(id)
-    ElMessage.success('Rejected successfully')
-    // Refresh the table data
-    await fetchVendorRequest();
-  } catch (error) {
-    ElMessage.error('Failed to Rejected: ' + error.message)
-    console.error('Failed to Rejected:', error)
-  }
-}
-const confirmReject = async (id) => {
-  try {
-    // Show confirmation dialog
-    await ElMessageBox.confirm(
-      'Are you sure you want to reject this vendor?',
-      'Approve',
-      {
-        confirmButtonText: 'Reject',
-        cancelButtonText: 'Cancel',
-        type: 'warning',
-      },
-    )
-    // If confirmed, call the approved handler with the passed ID
-    await handleReject(id)
-  } catch (error) {
-    if (error !== 'cancel') {
-      ElMessage.error('Error while confirming reject: ' + error.message)
-      console.error('Error while confirming reject:', error)
-    } else {
-      ElMessage.info('Vendor reject cancelled')
-    }
-  }
-}
 
 // Handle search (debounced)
 const searchHandler = debounce(async () => {
   currentPage.value = 1; // Reset to the first page on search
-  await fetchVendorRequest();
+  await fetchVendorList();
 }, 500);
 
 // Trigger search when the button is clicked
@@ -125,7 +47,7 @@ const handleSearch = async () => {
 }
 // Fetch data on component mount
 onMounted(() => {
-  fetchVendorRequest();
+  fetchVendorList();
 });
 </script>
 
@@ -133,7 +55,7 @@ onMounted(() => {
   <div class="flex flex-col p-4">
     <!-- Section 1 -->
     <div class="pb-4 mb-4">
-      <h1 class="text-3xl font-semibold">Vendor Request</h1>
+      <h1 class="text-3xl font-semibold">Vendor List</h1>
     </div>
 
     <!-- Search -->
@@ -166,14 +88,8 @@ onMounted(() => {
         <el-table-column prop="address" label="Address" width="300" />
         <el-table-column label="Action" >
           <template #default="scope">
-            <el-button @click="navigateTo('vendor/view/' + scope.row.id)">
+            <el-button @click="navigateTo('vendor-list/view/' + scope.row.id)">
               <i class="fa-solid fa-eye"></i>
-            </el-button>
-            <el-button v-if="scope.row.status !== 'active'" @click="confirmApprove(scope.row.id)" type="success" class="bg-emerald-600">
-              <i class="fa-solid fa-check "></i>
-            </el-button>
-            <el-button v-if="scope.row.status !== 'active'" @click="confirmReject(scope.row.id)" type="danger">
-              <i class="fa-solid fa-xmark"></i>
             </el-button>
           </template>
         </el-table-column>
