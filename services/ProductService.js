@@ -24,7 +24,7 @@ class ProductService extends BaseService {
     const queryParams = new URLSearchParams(filteredParams).toString()
 
     // Make the API call with the query parameters
-    return await this._get(`${this._prefix}/all?${queryParams}`, {})
+    return await this._get(`${this._prefix}?${queryParams}`, {})
   }
   async getwishlist() {
     return await this._get(`${this._prefix}/wishlist`)
