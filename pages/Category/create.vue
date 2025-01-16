@@ -61,6 +61,8 @@ const onSubmit = async () => {
         formData.append('parent', formValidate.parent)
         formData.append('description', formValidate.description)
         formData.append('icon', formValidate.icon.raw)  // Pass raw file for binary upload
+        //slug
+        formData.append('slug', formValidate.name.toLowerCase().replace(/ /g, '-'))
 
         // Create category via store
         await categoryStore.createCategory(formData)
