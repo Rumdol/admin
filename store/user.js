@@ -36,9 +36,25 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
+  //updateProfile function
+  const updateUser = async (id ,req) => {
+    try {
+      const { data } = await userService.updateProfile(id, req)
+      if (!data) {
+        throw new Error('No data returned')
+      }
+      user.value = data
+      return data
+    } catch (error) {
+      ElMessage.error(error.message || 'Login failed')
+      throw new Error(`Login failed: ${error.message || 'Unknown error'}`)
+    }
+  }
+
   return {
     user: computed(() => user.value),
     getUsers,
     showUser,
+    updateUser
   }
 })

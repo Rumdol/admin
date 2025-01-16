@@ -94,7 +94,7 @@ onMounted(() => {
 
     <!-- Tabs for User Categories -->
     <ElTabs>
-      <ElTabPane label="Superusers">
+      <ElTabPane label="Admin">
         <div>
           <ElTable :data="superusers" class="w-full">
             <ElTableColumn prop="name" label="Name" />

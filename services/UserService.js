@@ -17,8 +17,8 @@ class UserService extends BaseService {
     return await this._get(`${this._prefix}/me`)
   }
 
-  async updateProfile(req) {
-    return await this._post(`${this._prefix}/update-profile`, req)
+  async updateProfile(id ,req) {
+    return await this._post(`${this._prefix}/${id}`, req)
   }
 
   async updatePassword(req) {
