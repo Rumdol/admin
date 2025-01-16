@@ -23,6 +23,18 @@ class VendorService extends BaseService {
     // Make the API call and return the result
     return await this._get(url);
   }
+
+  async getPendingVendor(params = {}) {
+    // Transform query parameters to a query string
+    const queryParams = new URLSearchParams(params).toString();
+
+    // Append query string to the endpoint if params exist
+    const url = queryParams ? `${this._prefix}/pending?${queryParams}` : this._prefix;
+
+    // Make the API call and return the result
+    return await this._get(url);
+  }
+
   async getVendorDetail(id) {
     if (!id) {
       throw new Error('Vendor ID is required to fetch details.');
