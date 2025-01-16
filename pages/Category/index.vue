@@ -12,36 +12,38 @@ const categoryStore = useCategoryStore()
 
 const tableData = ref([])
 const multipleTableRef = ref(null)
-const multipleSelection = ref([])
-const totalItems = ref(0) // Track total items for pagination
-const currentPage = ref(1) // Current page number
+const totalItems = ref(0) // Total items count
+const currentPage = ref(1) // Current page
+const perPage = ref(5) // Items per page (default from API)
+const lastPage = ref(1) // Last page number
 const searchTerm = ref('') // Ref for the search input
 const { debounce } = useDebounce()
 // Debounced search handler
 
-//Get category to show on the table
+// Fetch categories for the table
 const fetchCategories = async () => {
   try {
-    const { categories, total } = await categoryStore.getCategory({
+    const response = await categoryStore.getCategory({
       page: currentPage.value,
-      search: searchTerm.value.trim(),
+      search: searchTerm.value,
     })
+
+    const { categories, total, per_page, last_page } = response
     tableData.value = categories.data || []
     totalItems.value = total || 0
-    console.log(tableData.value)
+    perPage.value = per_page || 5
+    lastPage.value = last_page || 1
   } catch (error) {
-    console.log('Failed to fetch categories', error)
+    console.error('Failed to fetch categories:', error)
   }
 }
 
 // Handle page change
 const handlePageChange = (newPage) => {
-  currentPage.value = newPage
-  fetchCategories()
-}
-
-const handleSelectionChange = (val) => {
-  multipleSelection.value = val
+  if (newPage >= 1 && newPage <= lastPage.value) {
+    currentPage.value = newPage
+    fetchCategories()
+  }
 }
 
 // Handle deletion
@@ -82,7 +84,10 @@ const confirmDelete = async (id) => {
     }
   }
 }
-
+const onPageChange = (page) => {
+  currentPage.value = page;
+  fetchCategories();
+}
 // Handle search (debounced)
 const searchHandler = debounce(async () => {
   currentPage.value = 1 // Reset to the first page on search
@@ -167,12 +172,13 @@ onMounted(() => {
 
     <!--Pagination-->
     <div class="pr-[50px] pt-[10px] mb-4 justify-center justify-items-end">
+      <!-- Pagination -->
       <el-pagination
-        :current-page="currentPage"
-        :page-size="pageSize"
+        v-model:currentPage="currentPage"
+        :page-size="perPage"
         :total="totalItems"
-        @current-change="handlePageChange"
-        layout="total,prev, pager, next, jumper"
+        layout="prev, pager, next, total"
+        @current-change="onPageChange"
       />
     </div>
   </div>

@@ -40,7 +40,7 @@
       <!-- Action Buttons -->
       <el-form-item class="flex justify-between items-center ml-80">
         <el-button @click="router.push('/category')">Cancel</el-button>
-        <el-button type="primary" @click="onSubmit" class="update-button">Save Changes</el-button>
+        <el-button type="primary" @click="onSubmit" class="update-button">Save</el-button>
       </el-form-item>
     </el-form>
   </div>
