@@ -20,6 +20,7 @@ const fetchUser = async () => {
 const updateUserHandler = async () => {
   try {
     await updateUser(user.value.id, { status: user.value.status }) // Fix here
+    navigateTo('/UserManagement')
   } catch (error) {
     console.error('Failed to update User:', error)
   }
