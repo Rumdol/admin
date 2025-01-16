@@ -10,7 +10,7 @@ definePageMeta({
 
 const vendorStore = useVendorStore();
 const { debounce } = useDebounce()
-const { getVendor, vendorApprove, vendorReject } = vendorStore;
+const { getPendingVendor, vendorApprove, vendorReject } = vendorStore;
 const vendorList = ref([]);
 const currentPage = ref(1);
 const totalVendorRequest = ref(0);
@@ -20,7 +20,7 @@ const searchTerm = ref(''); //Ref for the search input
 // Fetch vendor requests
 const fetchVendorRequest = async () => {
   try {
-    const response = await getVendor({ page: currentPage.value, search: searchTerm.value.trim() });
+    const response = await getPendingVendor({ page: currentPage.value, search: searchTerm.value.trim() });
     const { vendorRequest, total } = response || {};
     vendorRequest.data = vendorRequest.data.filter(vendor => vendor.status !== 'active')
     vendorList.value = vendorRequest?.data || [];

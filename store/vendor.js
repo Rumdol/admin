@@ -20,6 +20,18 @@ export const useVendorStore = defineStore('vendor', () => {
     }
   }
 
+  const getPendingVendor = async (params) => {
+    try {
+      const { data } = await vendorService.getPendingVendor(params)
+      const total = data?.total || 0;
+      vendorRequest.value = data || {};
+      return {vendorRequest:vendorRequest.value, total}
+    } catch (error) {
+      ElMessage.error(error.message || 'Get vendor request failed')
+      throw new Error(`Vendor request failed: ${error.message || 'Unknown error'}`)
+    }
+  }
+
   const getVendorDetail = async (id) => {
     try {
       const { data } = await vendorService.getVendorDetail(id);
@@ -62,5 +74,6 @@ export const useVendorStore = defineStore('vendor', () => {
     getVendorDetail,
     vendorApprove,
     vendorReject,
+    getPendingVendor
   }
 })
