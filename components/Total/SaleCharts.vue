@@ -1,5 +1,5 @@
 <template>
-  <div class="h-[400px] w-[800px] rounded-md shadow p-[20px] m-4">
+  <div class="h-[400px] w-[700px] rounded-md shadow p-[20px] m-4">
     <h1><strong>Revenue</strong></h1>
     <canvas id="myChart"></canvas>
   </div>
