@@ -24,5 +24,12 @@ class DashboardService extends BaseService {
     return await this._get(url);
   }
 
+  //subscription
+  async calculateSubscription() {
+    const url = `${this._prefix}/subscription`;
 
-}export default DashboardService
+    // Make the API call and return the result
+    return await this._post(url);
+  }
+}
+export default DashboardService

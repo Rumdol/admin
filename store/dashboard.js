@@ -19,8 +19,19 @@ export const useDashboardStore = defineStore('dashboard', () => {
     }
   };
 
+  //calculateSubscription
+  const calculateSubscription = async () => {
+    try {
+      const { data } = await dashboardService.calculateSubscription(); // Call the service method
+      return data || {}; // Return the response data
+    } catch (error) {
+      throw new Error(`Failed to calculate subscription: ${errorMessage}`);
+    }
+  };
+
   return {
     dashboard: computed(() => dashboard.value), // Expose the dashboard state
     getDashboard, // Expose the getDashboard action
+    calculateSubscription, // Expose the calculateSubscription action
   };
 });
