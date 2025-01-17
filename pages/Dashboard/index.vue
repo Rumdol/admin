@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard-container p-4">
+  <div class="p-4">
     <div class="total-list flex flex-wrap gap-6">
       <ul class="flex flex-wrap gap-6 ml-2">
         <li>

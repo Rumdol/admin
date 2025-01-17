@@ -36,6 +36,16 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  const getProfile = async () => {
+    try {
+      const { data } = await authService.getProfile()
+      return data
+    } catch (error) {
+      ElMessage.error(error.message || 'Get Profile failed')
+      throw new Error(`Get Profile failed: ${error.message || 'Unknown error'}`)
+    }
+  }
+
   //getMe function
   const getMe = async () => {
     try {
@@ -66,5 +76,6 @@ export const useAuthStore = defineStore('auth', () => {
     login,
     logout,
     getMe,
+    getProfile
   }
 })

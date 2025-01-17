@@ -69,9 +69,9 @@ onMounted(() => {
 </script>
 
 <template>
+  <button @click="navigateTo('/Dashboard')" class="bg-primary p-2 rounded w-[100px]">Back</button>
   <div class="p-6 max-w-xl mx-auto">
     <h1 class="text-2xl font-bold mb-6">Profile Settings</h1>
-
     <div class="space-y-4">
       <!-- Profile Image -->
       <div class="flex flex-col items-center space-y-4">
